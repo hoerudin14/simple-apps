@@ -4,7 +4,7 @@ const app = express()
 const path = require('path')
 require('dotenv').config();
 
-apppp.disable("x-powered-by");
+app.disable("x-powered-by");
 
 
 // Import Middleware
