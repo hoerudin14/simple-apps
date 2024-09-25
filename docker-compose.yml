@@ -9,7 +9,7 @@ services:
     ports:
       - "3000"
     volumes:
-      - app-data:/app/public/images
+      - app-data:/apps/public/images
 
   db:
     image: "mariadb"
