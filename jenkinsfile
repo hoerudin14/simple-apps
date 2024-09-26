@@ -1,0 +1,47 @@
+pipeline {
+    //Run ageng server1-hoeudin
+    agent {label 'server1-hoerudin'}
+    
+    //Tools nodejs
+    tools {nodejs 'nodejs'}
+
+    // Running CI/CD pipeline
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hoerudin14/simple-apps.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''cd apps
+                npm install'''
+            }
+        }
+        stage('Testing') {
+            steps {
+                sh '''cd apps
+                npm test
+                npm run test:coverage'''
+            }
+        }
+        stage('Code Review') {
+            steps {
+                sh '''cd apps
+                sonar-scanner \
+                -Dsonar.projectKey=simple-apps \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://10.23.10.101:9000 \
+                -Dsonar.login=sqp_d5b4e4bd0ad543a194f0399c4be60966'''
+            }
+        }
+        stage('Deploy compose') {
+            steps {
+                sh '''
+                docker compose build
+                docker compose up -d
+                '''
+            }
+        }
+    }
+}
